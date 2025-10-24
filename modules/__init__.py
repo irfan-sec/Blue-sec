@@ -7,6 +7,10 @@ from modules.config import BlueSecConfig, load_config
 from modules.scanner import DeviceScanner, BluetoothDevice, scan_bluetooth_devices
 from modules.vulnerabilities import Vulnerability, CVEDatabase, VulnerabilityScanner
 from modules.attacks import AttackResult, AttackManager
+from modules.hid_attacks import (
+    HIDPayload, HIDAttackResult, HIDKeyboardInjector,
+    RealTimeDeviceTester, PayloadGenerator
+)
 from modules.reporting import ReportGenerator, SIEMIntegration, MITRE_ATTACK_MAPPING
 from modules.utils import (
     banner, setup_logging, check_privileges, require_privileges,
@@ -24,6 +28,9 @@ __all__ = [
     'Vulnerability', 'CVEDatabase', 'VulnerabilityScanner',
     # Attacks
     'AttackResult', 'AttackManager',
+    # HID Attacks
+    'HIDPayload', 'HIDAttackResult', 'HIDKeyboardInjector',
+    'RealTimeDeviceTester', 'PayloadGenerator',
     # Reporting
     'ReportGenerator', 'SIEMIntegration', 'MITRE_ATTACK_MAPPING',
     # Utils
