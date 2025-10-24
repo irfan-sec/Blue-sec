@@ -1,6 +1,6 @@
-I'll help you create a professional README for your Blue-sec repository.Here's the comprehensive README for your Blue-sec tool:
+# Blue-sec
 
-```markdown name=README.md
+```markdown
 <div align="center">
   <img src="assets/logo.png" alt="Blue-sec Logo" width="200"/>
   <h1>Blue-sec</h1>
@@ -65,7 +65,7 @@ cd Blue-sec
 pip install -r requirements.txt
 
 # Run the tool
-sudo python3 blue-sec.py
+sudo python3 blue-sec.py --help
 ```
 
 ### Docker Installation
@@ -106,17 +106,31 @@ sudo python3 blue-sec.py --enterprise-scan --output json --siem-forward
 ## 🏗️ Project Structure
 ```
 Blue-sec/
-├── blue-sec.py           # Main executable
+├── blue-sec.py              # Main CLI application
 ├── modules/
-│   ├── scanner.py        # Device discovery
-│   ├── vulnerabilities.py # Vulnerability assessment
-│   ├── attacks.py        # Attack simulations
-│   └── utils.py          # Utility functions
+│   ├── __init__.py          # Module exports
+│   ├── config.py            # Configuration management
+│   ├── scanner.py           # Device discovery & enumeration
+│   ├── vulnerabilities.py   # Vulnerability assessment & CVE DB
+│   ├── attacks.py           # Attack simulation modules
+│   ├── reporting.py         # Report generation & MITRE mapping
+│   ├── api.py               # REST API for enterprise integration
+│   └── utils.py             # Utility functions & helpers
 ├── data/
-│   ├── cve_database.json # CVE information
-│   └── payloads/         # Custom payloads
-├── reports/              # Generated reports
-└── config/              # Configuration files
+│   ├── cve_database.json    # CVE information (auto-generated)
+│   └── payloads/            # Custom attack payloads
+├── reports/                 # Generated security reports
+├── config/
+│   └── blue-sec.yaml        # Default configuration
+├── tests/
+│   └── test_blue_sec.py     # Unit tests
+├── docs/
+│   ├── API.md               # API documentation
+│   └── USAGE.md             # Usage guide
+├── Dockerfile               # Docker container definition
+├── docker-compose.yml       # Docker Compose configuration
+├── requirements.txt         # Python dependencies
+└── LICENSE                  # MIT License
 ```
 
 ## 🛡️ Security Features
@@ -149,19 +163,39 @@ api_key = your_api_key
 
 ## 📊 Report Examples
 
-- Vulnerability Assessment Report
-- Attack Simulation Results
-- Compliance Audit Reports
-- Device Discovery Logs
-- MITRE ATT&CK Mapping
+Blue-sec generates comprehensive reports in multiple formats:
+
+- **Vulnerability Assessment Reports** - Detailed CVE analysis with CVSS scores
+- **Attack Simulation Results** - Complete attack logs with success metrics
+- **Compliance Audit Reports** - NIST/compliance framework mappings
+- **Device Discovery Logs** - Full device enumeration data
+- **MITRE ATT&CK Mapping** - Technique and tactic correlation
+
+All reports support JSON, XML, and HTML formats.
+
+## 🧪 Testing
+
+Run the test suite:
+
+```bash
+# Install test dependencies
+pip install pytest pytest-asyncio pytest-cov
+
+# Run tests
+pytest tests/ -v
+
+# Run with coverage
+pytest tests/ --cov=modules --cov-report=html
+```
 
 ## 🤝 Contributing
 
 1. Fork the repository
 2. Create a feature branch (`git checkout -b feature/AmazingFeature`)
 3. Commit changes (`git commit -m 'Add AmazingFeature'`)
-4. Push to branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
+4. Run tests (`pytest tests/`)
+5. Push to branch (`git push origin feature/AmazingFeature`)
+6. Open a Pull Request
 
 ## 📜 License
 
@@ -191,5 +225,19 @@ This tool is for educational and authorized testing purposes only. The authors a
 </div>
 ```
 
+## 📖 Documentation
 
-Copilot is powered by AI, so mistakes are possible. Leave a comment via the 👍 👎 to share your feedback and help improve the experience.
+- [Usage Guide](docs/USAGE.md) - Comprehensive usage instructions
+- [API Documentation](docs/API.md) - REST API reference
+- [Configuration Guide](config/blue-sec.yaml) - Configuration options
+
+## 🔒 Security Notice
+
+This tool is designed for **authorized security testing only**. The authors and contributors:
+
+- Do NOT condone illegal use of this software
+- Are NOT responsible for any misuse or damage
+- Recommend following responsible disclosure practices
+- Encourage compliance with all applicable laws and regulations
+
+**Use responsibly and ethically. Always obtain proper authorization before testing.**
