@@ -1,0 +1,59 @@
+# Core Bluetooth libraries
+bleak>=0.21.1
+pybluez>=0.23
+bluetooth-le>=0.1.2
+
+# Async support
+aiohttp>=3.9.1
+asyncio>=3.4.3
+
+# Security and cryptography
+cryptography>=41.0.7
+pycryptodome>=3.19.0
+
+# Data handling
+aiosqlite>=0.19.0
+python-dotenv>=1.0.0
+pyyaml>=6.0.1
+
+# Networking
+scapy>=2.5.0
+netifaces>=0.11.0
+
+# CLI and UI
+rich>=13.7.0
+colorama>=0.4.6
+prompt-toolkit>=3.0.43
+click>=8.1.7
+
+# Reporting
+jinja2>=3.1.2
+reportlab>=4.0.7
+fpdf2>=2.7.6
+openpyxl>=3.1.2
+
+# API and Web
+fastapi>=0.109.0
+uvicorn>=0.27.0
+pydantic>=2.5.3
+requests>=2.31.0
+
+# Logging and monitoring
+loguru>=0.7.2
+python-json-logger>=2.0.7
+
+# Testing and validation
+pytest>=7.4.3
+pytest-asyncio>=0.23.3
+pytest-cov>=4.1.0
+
+# Security scanning
+bandit>=1.7.6
+
+# Database
+sqlalchemy>=2.0.25
+aiosqlite>=0.19.0
+
+# Utilities
+python-dateutil>=2.8.2
+pytz>=2023.3

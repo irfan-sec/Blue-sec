@@ -1,0 +1,43 @@
+scanner:
+  active_scan_timeout: 10
+  passive_scan_duration: 30
+  device_cache_time: 300
+  max_concurrent_scans: 5
+  rssi_threshold: -80
+
+security:
+  rate_limit: true
+  max_attempts: 3
+  require_confirmation: true
+  enable_audit_log: true
+  audit_log_path: reports/audit.log
+  dangerous_ops_require_auth: true
+  session_timeout: 3600
+
+enterprise:
+  siem_enabled: false
+  siem_url: null
+  api_key: null
+  api_enabled: false
+  api_port: 8000
+  api_host: "127.0.0.1"
+  compliance_reporting: true
+
+attack:
+  enable_mitm: true
+  enable_bruteforce: true
+  enable_injection: true
+  max_bruteforce_attempts: 1000
+  bruteforce_delay: 0.1
+  payload_directory: data/payloads
+
+reporting:
+  output_directory: reports
+  default_format: json
+  include_mitre_mapping: true
+  include_screenshots: false
+  compress_reports: false
+  report_retention_days: 30
+
+debug_mode: false
+log_level: INFO
