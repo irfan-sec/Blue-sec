@@ -1,0 +1,14 @@
+{
+    "name": "Rickroll Test",
+    "description": "Harmless test payload that opens Rick Astley's Never Gonna Give You Up",
+    "target_os": "all",
+    "delay_ms": 100,
+    "commands": [
+        "REM Harmless test payload for demonstration",
+        "DELAY 1000",
+        "GUI r",
+        "DELAY 500",
+        "STRING https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+        "ENTER"
+    ]
+}

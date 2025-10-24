@@ -1,10 +1,9 @@
 # Blue-sec
 
-```markdown
 <div align="center">
-  <img src="assets/logo.png" alt="Blue-sec Logo" width="200"/>
-  <h1>Blue-sec</h1>
-  <p>Advanced Bluetooth Security Testing Framework for Enterprise Environments</p>
+  <h1>🔵 Blue-sec</h1>
+  <p><strong>Advanced Bluetooth Security Testing Framework with Real-Time HID Attacks</strong></p>
+  <p>The World's Most Comprehensive Bluetooth Security Testing Tool</p>
 
   [![GitHub license](https://img.shields.io/github/license/irfan-sec/Blue-sec)](https://github.com/irfan-sec/Blue-sec/blob/main/LICENSE)
   [![Python 3.11+](https://img.shields.io/badge/python-3.11%2B-blue)](https://www.python.org/downloads/)
@@ -14,36 +13,82 @@
   [![Security: Bandit](https://img.shields.io/badge/Security-Bandit-yellow.svg)](https://github.com/PyCQA/bandit)
 </div>
 
+---
+
 ## 🚨 Security Warning
 
-This tool is designed for **authorized security testing only**. Unauthorized use against systems you don't own or have explicit permission to test is illegal and unethical. Users are responsible for complying with all applicable laws and regulations.
+**This tool is designed for authorized security testing only.** Unauthorized use against systems you don't own or have explicit permission to test is **illegal and unethical**. Users are responsible for complying with all applicable laws and regulations.
 
-## 🎯 Features
+---
 
-- **Device Discovery & Enumeration**
+## 🌟 What Makes Blue-sec the World's Best?
+
+Blue-sec combines **traditional Bluetooth security testing** with **cutting-edge HID attack capabilities** similar to **BlueDucky** and **Rubber Ducky**, making it the most comprehensive Bluetooth security framework available:
+
+### ✨ Unique Features
+- 🎯 **Real-Time HID Attacks** - BadUSB/Rubber Ducky style keyboard injection via Bluetooth
+- 🔴 **Interactive Device Testing** - Live testing on real hardware
+- 💉 **Payload Injection System** - Pre-built and custom payloads
+- 🎮 **DuckyScript Support** - Compatible payload format
+- 📡 **Bluetooth & Classic** - Full BLE and Classic Bluetooth support
+- 🏢 **Enterprise Ready** - SIEM integration, REST API, compliance reporting
+- 📊 **CVE Database** - Real-time vulnerability assessment
+- 🛡️ **Attack Simulation** - MITM, Bluesnarfing, Bluebugging, and more
+
+### 🆚 Blue-sec vs BlueDucky
+
+| Feature | Blue-sec | BlueDucky |
+|---------|----------|-----------|
+| **HID Keyboard Injection** | ✅ | ✅ |
+| **Bluetooth Wireless** | ✅ | ✅ |
+| **Device Scanning** | ✅ | ❌ |
+| **Vulnerability Assessment** | ✅ | ❌ |
+| **MITM Attacks** | ✅ | ❌ |
+| **Interactive Testing** | ✅ | ❌ |
+| **Payload Generator** | ✅ | ⚠️ Limited |
+| **Cross-Platform** | ✅ | ⚠️ Hardware-dependent |
+| **Enterprise Features** | ✅ | ❌ |
+| **REST API** | ✅ | ❌ |
+| **Compliance Reporting** | ✅ | ❌ |
+| **CVE Database** | ✅ | ❌ |
+
+--- ## 🎯 Features
+
+### 🎮 Real-Time HID Attacks (NEW!)
+- **BadUSB/Rubber Ducky Style Attacks**
+  - Bluetooth HID keyboard emulation
+  - Mouse injection capabilities
+  - DuckyScript-compatible payload format
+  - Interactive testing mode
+  - Pre-built payload library
+  - Custom payload generator
+
+### 📡 Device Discovery & Enumeration
   - Active and passive Bluetooth device scanning
   - Service and characteristic enumeration
   - Device fingerprinting and profiling
   - RSSI monitoring and mapping
 
-- **Vulnerability Assessment**
+### 🛡️ Vulnerability Assessment
   - Real-time CVE database integration
   - Protocol weakness detection
   - Firmware version analysis
   - Configuration auditing
 
-- **Attack Simulation**
+### ⚔️ Attack Simulation
   - Man-in-the-Middle (MITM) framework
   - Bluesnarfing detection
   - Bluebugging simulation
   - Bluejacking testing
   - Custom payload creation
 
-- **Enterprise Integration**
+### 🏢 Enterprise Integration
   - SIEM compatibility
   - REST API endpoints
   - Compliance reporting
   - Audit logging
+
+---
 
 ## 🔧 Installation
 
@@ -79,29 +124,72 @@ docker run --net=host --privileged -it blue-sec
 
 ## 📚 Usage
 
-### Basic Scanning
+### 🎮 HID Attack Mode (BlueDucky-Style)
+
+**Test keyboard injection (harmless):**
+```bash
+# Interactive testing
+sudo python3 blue-sec.py hid-test AA:BB:CC:DD:EE:FF --interactive
+
+# Execute test payload
+sudo python3 blue-sec.py hid-test AA:BB:CC:DD:EE:FF --payload data/payloads/hid/test_keyboard.json
+
+# Rickroll test (harmless)
+sudo python3 blue-sec.py hid-test AA:BB:CC:DD:EE:FF --payload data/payloads/hid/rickroll_test.json
+```
+
+**Generate custom payloads:**
+```bash
+# Generate reverse shell payload
+sudo python3 blue-sec.py generate-payload \
+  --name "Custom Shell" \
+  --type reverse_shell \
+  --os linux \
+  --ip 192.168.1.100 \
+  --port 4444 \
+  --output my_payload.json
+
+# Generate info gathering payload
+sudo python3 blue-sec.py generate-payload \
+  --name "System Info" \
+  --type info_gather \
+  --os windows \
+  --output sysinfo.json
+```
+
+**Available HID Payloads:**
+- `test_keyboard.json` - Harmless keyboard test
+- `rickroll_test.json` - Fun test payload
+- `info_gather_windows.json` - System information gathering
+- `wifi_exfil_windows.json` - WiFi password extraction
+- `reverse_shell_linux.json` - Linux reverse shell
+- `reverse_shell_windows.json` - Windows reverse shell
+
+### 📡 Basic Scanning
 ```bash
 # Perform basic device discovery
-sudo python3 blue-sec.py --scan
+sudo python3 blue-sec.py scan
 
 # Run vulnerability assessment
-sudo python3 blue-sec.py --vuln-scan <target-address>
+sudo python3 blue-sec.py vuln-scan <target-address>
 
 # Execute security audit
-sudo python3 blue-sec.py --audit <target-address> --report pdf
+sudo python3 blue-sec.py audit --format json
 ```
 
-### Advanced Features
+### ⚔️ Advanced Attack Simulation
 ```bash
 # MITM Attack Simulation
-sudo python3 blue-sec.py --mitm <target1-address> <target2-address>
+sudo python3 blue-sec.py attack --type mitm --target <target1> --target2 <target2>
 
-# Custom Payload Injection
-sudo python3 blue-sec.py --inject <target-address> --payload <payload-file>
+# Bluesnarfing Test
+sudo python3 blue-sec.py attack --type bluesnarfing --target <target-address>
 
-# Enterprise Scanning
-sudo python3 blue-sec.py --enterprise-scan --output json --siem-forward
+# Bluejacking Test
+sudo python3 blue-sec.py attack --type bluejacking --target <target-address> --message "Test"
 ```
+
+---
 
 ## 🏗️ Project Structure
 ```
@@ -113,12 +201,21 @@ Blue-sec/
 │   ├── scanner.py           # Device discovery & enumeration
 │   ├── vulnerabilities.py   # Vulnerability assessment & CVE DB
 │   ├── attacks.py           # Attack simulation modules
+│   ├── hid_attacks.py       # HID keyboard/mouse injection (NEW!)
 │   ├── reporting.py         # Report generation & MITRE mapping
 │   ├── api.py               # REST API for enterprise integration
 │   └── utils.py             # Utility functions & helpers
 ├── data/
 │   ├── cve_database.json    # CVE information (auto-generated)
-│   └── payloads/            # Custom attack payloads
+│   └── payloads/
+│       ├── hid/             # HID attack payloads (NEW!)
+│       │   ├── test_keyboard.json
+│       │   ├── rickroll_test.json
+│       │   ├── reverse_shell_linux.json
+│       │   ├── reverse_shell_windows.json
+│       │   ├── wifi_exfil_windows.json
+│       │   └── info_gather_windows.json
+│       └── example_payload.json
 ├── reports/                 # Generated security reports
 ├── config/
 │   └── blue-sec.yaml        # Default configuration
@@ -133,14 +230,20 @@ Blue-sec/
 └── LICENSE                  # MIT License
 ```
 
+---
+
 ## 🛡️ Security Features
 
-- Rate limiting for aggressive operations
-- Authentication for dangerous functions
-- Comprehensive audit logging
-- Fail-safe mechanisms
-- Warning systems
-- CVE database integration
+- ✅ Rate limiting for aggressive operations
+- ✅ Authentication for dangerous functions
+- ✅ Comprehensive audit logging
+- ✅ Fail-safe mechanisms and kill switches
+- ✅ User confirmation for HID attacks
+- ✅ Warning systems for dangerous operations
+- ✅ CVE database integration
+- ✅ Payload validation and sanitization
+
+---
 
 ## 📝 Configuration
 
@@ -167,11 +270,14 @@ Blue-sec generates comprehensive reports in multiple formats:
 
 - **Vulnerability Assessment Reports** - Detailed CVE analysis with CVSS scores
 - **Attack Simulation Results** - Complete attack logs with success metrics
+- **HID Attack Reports** - Payload execution logs and results
 - **Compliance Audit Reports** - NIST/compliance framework mappings
 - **Device Discovery Logs** - Full device enumeration data
 - **MITRE ATT&CK Mapping** - Technique and tactic correlation
 
 All reports support JSON, XML, and HTML formats.
+
+---
 
 ## 🧪 Testing
 
@@ -188,56 +294,93 @@ pytest tests/ -v
 pytest tests/ --cov=modules --cov-report=html
 ```
 
+---
+
+## 🎓 Learning Resources
+
+### Video Tutorials
+- Coming soon: YouTube channel with full demonstrations
+- HID attack walkthroughs
+- Enterprise deployment guides
+
+### Documentation
+- [Usage Guide](docs/USAGE.md) - Comprehensive usage instructions
+- [API Documentation](docs/API.md) - REST API reference
+- [Configuration Guide](config/blue-sec.yaml) - Configuration options
+
+### Example Scenarios
+1. **Testing Corporate Bluetooth Security**
+2. **HID Attack Demonstrations (Authorized Labs)**
+3. **Vulnerability Assessment Workflows**
+4. **Compliance Auditing Procedures**
+
+---
+
 ## 🤝 Contributing
+
+We welcome contributions! Here's how:
 
 1. Fork the repository
 2. Create a feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit changes (`git commit -m 'Add AmazingFeature'`)
-4. Run tests (`pytest tests/`)
-5. Push to branch (`git push origin feature/AmazingFeature`)
-6. Open a Pull Request
+3. Make your changes
+4. Add/update tests as needed
+5. Run tests (`pytest tests/`)
+6. Commit changes (`git commit -m 'Add AmazingFeature'`)
+7. Push to branch (`git push origin feature/AmazingFeature`)
+8. Open a Pull Request
+
+---
 
 ## 📜 License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
+---
+
 ## 🙏 Acknowledgments
 
+- **BlueDucky** - Inspiration for HID attack implementation
+- **Rubber Ducky** - DuckyScript format reference
 - Bluetooth SIG Documentation
 - NIST Special Publication 800-121
 - CVE Database Contributors
 - Open Source Security Community
 
+---
+
 ## 📬 Contact
 
-Irfan Ali - [@irfan_sec](https://twitter.com/irfan_sec)
-Website - [cyberlearn.systems](https://cyberlearn.systems)
-Email - ceoirfan@cyberlearn.systems
+**Irfan Ali**
+- Twitter: [@irfan_sec](https://twitter.com/irfan_sec)
+- Website: [cyberlearn.systems](https://cyberlearn.systems)
+- Email: ceoirfan@cyberlearn.systems
+- GitHub: [@irfan-sec](https://github.com/irfan-sec)
+
+---
 
 ## ⚠️ Disclaimer
 
-This tool is for educational and authorized testing purposes only. The authors assume no liability for misuse or damage caused by this program. Use responsibly and ethically.
+**This tool is for educational and authorized testing purposes only.** The authors assume no liability for misuse or damage caused by this program. 
 
----
-<div align="center">
-  <p>Made with ❤️ by @irfan-sec</p>
-  <p>© 2025 Blue-sec - Enterprise Bluetooth Security Testing Framework</p>
-</div>
-```
+**Key Points:**
+- ⚠️ **NEVER** use on systems you don't own without written authorization
+- ⚠️ **ALWAYS** comply with local laws and regulations
+- ⚠️ **OBTAIN** explicit permission before testing
+- ⚠️ **FOLLOW** responsible disclosure practices
+- ⚠️ **UNDERSTAND** the legal implications in your jurisdiction
 
-## 📖 Documentation
-
-- [Usage Guide](docs/USAGE.md) - Comprehensive usage instructions
-- [API Documentation](docs/API.md) - REST API reference
-- [Configuration Guide](config/blue-sec.yaml) - Configuration options
-
-## 🔒 Security Notice
-
-This tool is designed for **authorized security testing only**. The authors and contributors:
-
+The authors and contributors:
 - Do NOT condone illegal use of this software
 - Are NOT responsible for any misuse or damage
 - Recommend following responsible disclosure practices
 - Encourage compliance with all applicable laws and regulations
 
 **Use responsibly and ethically. Always obtain proper authorization before testing.**
+
+---
+
+<div align="center">
+  <p><strong>Made with ❤️ by @irfan-sec</strong></p>
+  <p>© 2025 Blue-sec - The World's Most Comprehensive Bluetooth Security Testing Framework</p>
+  <p>Combining Traditional Bluetooth Security Testing with Real-Time HID Attacks</p>
+</div>
