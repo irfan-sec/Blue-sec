@@ -6,7 +6,7 @@ Supports keyboard/mouse injection via Bluetooth HID
 
 import asyncio
 import time
-from typing import List, Dict, Any, Optional, Callable
+from typing import List, Dict, Any, Optional, Callable, Union
 from dataclasses import dataclass
 from datetime import datetime
 from loguru import logger
@@ -56,7 +56,7 @@ class HIDPayload:
     """HID attack payload"""
     name: str
     description: str
-    commands: List[Dict[str, Any]]
+    commands: Union[List[str], List[Dict[str, Any]]]  # DuckyScript strings or action dicts
     target_os: str = "all"  # all, windows, linux, macos
     delay_ms: int = 100  # Default delay between commands
     
