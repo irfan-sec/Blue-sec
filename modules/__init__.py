@@ -11,7 +11,8 @@ from modules.reporting import ReportGenerator, SIEMIntegration, MITRE_ATTACK_MAP
 from modules.utils import (
     banner, setup_logging, check_privileges, require_privileges,
     confirm_action, format_mac_address, validate_mac_address,
-    timestamp, display_table, display_panel, AuditLogger, RateLimiter
+    timestamp, display_table, display_panel, AuditLogger, RateLimiter,
+    console
 )
 
 __all__ = [
@@ -28,5 +29,6 @@ __all__ = [
     # Utils
     'banner', 'setup_logging', 'check_privileges', 'require_privileges',
     'confirm_action', 'format_mac_address', 'validate_mac_address',
-    'timestamp', 'display_table', 'display_panel', 'AuditLogger', 'RateLimiter'
+    'timestamp', 'display_table', 'display_panel', 'AuditLogger', 'RateLimiter',
+    'console'
 ]
