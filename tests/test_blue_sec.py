@@ -5,9 +5,14 @@ Basic tests for core functionality
 
 import pytest
 import asyncio
+from pathlib import Path
 from modules.config import BlueSecConfig, ScannerConfig, SecurityConfig
 from modules.scanner import BluetoothDevice
 from modules.vulnerabilities import Vulnerability, CVEDatabase
+from modules.hid_attacks import (
+    HIDPayload, HIDKeyboardInjector, RealTimeDeviceTester,
+    PayloadGenerator, SCAN_CODES, MODIFIERS
+)
 from modules.utils import (
     format_mac_address, validate_mac_address, calculate_hash,
     RateLimiter, AuditLogger
@@ -182,6 +187,232 @@ class TestIntegration:
         # Just verify scanner initialization
         assert scanner.config.active_scan_timeout == 10
         assert len(scanner.discovered_devices) == 0
+
+
+class TestHIDAttacks:
+    """Test HID attack module"""
+    
+    def test_hid_payload_creation(self):
+        """Test HIDPayload creation"""
+        payload = HIDPayload(
+            name="Test Payload",
+            description="Test description",
+            commands=["STRING hello", "ENTER"],
+            target_os="windows"
+        )
+        assert payload.name == "Test Payload"
+        assert len(payload.commands) == 2
+        assert payload.target_os == "windows"
+    
+    def test_hid_payload_to_dict(self):
+        """Test HIDPayload serialization"""
+        payload = HIDPayload(
+            name="Test",
+            description="Test",
+            commands=["STRING test"],
+            target_os="all"
+        )
+        data = payload.to_dict()
+        assert data['name'] == "Test"
+        assert data['target_os'] == "all"
+        assert len(data['commands']) == 1
+    
+    def test_hid_payload_from_dict(self):
+        """Test HIDPayload deserialization"""
+        data = {
+            'name': "Test",
+            'description': "Test description",
+            'commands': ["STRING hello", "ENTER"],
+            'target_os': "linux",
+            'delay_ms': 200
+        }
+        payload = HIDPayload.from_dict(data)
+        assert payload.name == "Test"
+        assert payload.delay_ms == 200
+        assert len(payload.commands) == 2
+    
+    def test_hid_payload_from_file(self):
+        """Test loading HID payload from file"""
+        payload_path = Path("data/payloads/hid/rickroll_test.json")
+        if payload_path.exists():
+            payload = HIDPayload.from_file(str(payload_path))
+            assert payload.name == "Rickroll Test"
+            assert payload.target_os == "all"
+            assert len(payload.commands) > 0
+    
+    def test_scan_codes_exist(self):
+        """Test that scan codes are defined"""
+        assert 'a' in SCAN_CODES
+        assert 'ENTER' in SCAN_CODES
+        assert 'CTRL' in SCAN_CODES
+        assert len(SCAN_CODES) > 50  # Should have many keys
+    
+    def test_modifiers_exist(self):
+        """Test that modifiers are defined"""
+        assert 'CTRL' in MODIFIERS
+        assert 'SHIFT' in MODIFIERS
+        assert 'ALT' in MODIFIERS
+        assert 'GUI' in MODIFIERS
+    
+    @pytest.mark.asyncio
+    async def test_hid_injector_initialization(self):
+        """Test HIDKeyboardInjector initialization"""
+        from modules.config import AttackConfig, SecurityConfig
+        
+        attack_config = AttackConfig()
+        security_config = SecurityConfig()
+        injector = HIDKeyboardInjector(attack_config, security_config)
+        
+        assert injector.connected is False
+        assert injector.device_address is None
+    
+    @pytest.mark.asyncio
+    async def test_hid_injector_connect(self):
+        """Test HID connection simulation"""
+        from modules.config import AttackConfig, SecurityConfig
+        
+        attack_config = AttackConfig()
+        security_config = SecurityConfig()
+        injector = HIDKeyboardInjector(attack_config, security_config)
+        
+        # Connect should succeed in simulation mode
+        result = await injector.connect("AA:BB:CC:DD:EE:FF")
+        assert result is True
+        assert injector.connected is True
+        assert injector.device_address == "AA:BB:CC:DD:EE:FF"
+    
+    @pytest.mark.asyncio
+    async def test_hid_injector_disconnect(self):
+        """Test HID disconnection"""
+        from modules.config import AttackConfig, SecurityConfig
+        
+        attack_config = AttackConfig()
+        security_config = SecurityConfig()
+        injector = HIDKeyboardInjector(attack_config, security_config)
+        
+        await injector.connect("AA:BB:CC:DD:EE:FF")
+        assert injector.connected is True
+        
+        await injector.disconnect()
+        assert injector.connected is False
+        assert injector.device_address is None
+    
+    def test_parse_command_string(self):
+        """Test DuckyScript command parsing"""
+        from modules.config import AttackConfig, SecurityConfig
+        
+        attack_config = AttackConfig()
+        security_config = SecurityConfig()
+        injector = HIDKeyboardInjector(attack_config, security_config)
+        
+        # Test STRING command
+        actions = injector._parse_command("STRING hello")
+        assert len(actions) == 5  # 5 characters
+        assert all(a['type'] == 'keypress' for a in actions)
+        
+        # Test DELAY command
+        actions = injector._parse_command("DELAY 1000")
+        assert len(actions) == 1
+        assert actions[0]['type'] == 'delay'
+        assert actions[0]['duration'] == 1000
+        
+        # Test single key
+        actions = injector._parse_command("ENTER")
+        assert len(actions) == 1
+        assert actions[0]['type'] == 'keypress'
+    
+    @pytest.mark.asyncio
+    async def test_hid_execute_action_delay(self):
+        """Test executing delay action"""
+        from modules.config import AttackConfig, SecurityConfig
+        import time
+        
+        attack_config = AttackConfig()
+        security_config = SecurityConfig()
+        injector = HIDKeyboardInjector(attack_config, security_config)
+        
+        await injector.connect("AA:BB:CC:DD:EE:FF")
+        
+        action = {'type': 'delay', 'duration': 100}
+        start = time.time()
+        result = await injector.execute_action(action)
+        elapsed = time.time() - start
+        
+        assert result is True
+        assert elapsed >= 0.1  # Should wait at least 100ms
+    
+    @pytest.mark.asyncio
+    async def test_hid_execute_action_keypress(self):
+        """Test executing keypress action"""
+        from modules.config import AttackConfig, SecurityConfig
+        
+        attack_config = AttackConfig()
+        security_config = SecurityConfig()
+        injector = HIDKeyboardInjector(attack_config, security_config)
+        
+        await injector.connect("AA:BB:CC:DD:EE:FF")
+        
+        action = {'type': 'keypress', 'key': 'a', 'modifiers': []}
+        result = await injector.execute_action(action)
+        assert result is True
+    
+    def test_payload_generator_rickroll(self):
+        """Test PayloadGenerator rickroll"""
+        payload = PayloadGenerator.rickroll()
+        assert payload.name == "Rickroll Test"
+        assert payload.target_os == "all"
+        assert len(payload.commands) > 0
+    
+    def test_payload_generator_reverse_shell_linux(self):
+        """Test PayloadGenerator reverse shell for Linux"""
+        payload = PayloadGenerator.reverse_shell("192.168.1.100", 4444, "linux")
+        assert payload.name == "Reverse Shell"
+        assert payload.target_os == "linux"
+        assert len(payload.commands) > 0
+        # Check that IP and port are in the commands
+        commands_str = " ".join(payload.commands)
+        assert "192.168.1.100" in commands_str
+        assert "4444" in commands_str
+    
+    def test_payload_generator_reverse_shell_windows(self):
+        """Test PayloadGenerator reverse shell for Windows"""
+        payload = PayloadGenerator.reverse_shell("10.0.0.1", 8080, "windows")
+        assert payload.name == "Reverse Shell"
+        assert payload.target_os == "windows"
+        assert "10.0.0.1" in " ".join(payload.commands)
+        assert "8080" in " ".join(payload.commands)
+    
+    def test_payload_generator_wifi_exfil(self):
+        """Test PayloadGenerator WiFi exfiltration"""
+        payload = PayloadGenerator.wifi_password_exfiltration("windows")
+        assert payload.name == "WiFi Password Exfiltration"
+        assert payload.target_os == "windows"
+        assert len(payload.commands) > 0
+    
+    @pytest.mark.asyncio
+    async def test_real_time_tester_initialization(self):
+        """Test RealTimeDeviceTester initialization"""
+        from modules.config import AttackConfig, SecurityConfig
+        
+        attack_config = AttackConfig()
+        security_config = SecurityConfig()
+        tester = RealTimeDeviceTester(attack_config, security_config)
+        
+        assert tester.hid_injector is not None
+        assert len(tester.test_results) == 0
+    
+    @pytest.mark.asyncio
+    async def test_real_time_tester_start_session(self):
+        """Test starting interactive session"""
+        from modules.config import AttackConfig, SecurityConfig
+        
+        attack_config = AttackConfig()
+        security_config = SecurityConfig()
+        tester = RealTimeDeviceTester(attack_config, security_config)
+        
+        result = await tester.start_interactive_session("AA:BB:CC:DD:EE:FF")
+        assert result is True
+        assert tester.hid_injector.connected is True
 
 
 if __name__ == "__main__":
