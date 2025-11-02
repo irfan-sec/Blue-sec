@@ -1,0 +1,16 @@
+version: '3.8'
+
+services:
+  blue-sec:
+    build: .
+    container_name: blue-sec
+    network_mode: host
+    privileged: true
+    volumes:
+      - ./reports:/app/reports
+      - ./data:/app/data
+      - ./config:/app/config
+    environment:
+      - PYTHONUNBUFFERED=1
+    stdin_open: true
+    tty: true

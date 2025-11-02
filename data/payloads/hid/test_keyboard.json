@@ -1,0 +1,27 @@
+{
+    "name": "Keyboard Test",
+    "description": "Simple keyboard test payload - opens notepad and types test message",
+    "target_os": "windows",
+    "delay_ms": 100,
+    "commands": [
+        "REM Simple keyboard test",
+        "DELAY 1000",
+        "GUI r",
+        "DELAY 500",
+        "STRING notepad",
+        "ENTER",
+        "DELAY 1500",
+        "STRING Hello from Blue-sec!",
+        "ENTER",
+        "STRING This is a test of the HID keyboard injection system.",
+        "ENTER",
+        "STRING If you can read this, the attack vector is working.",
+        "ENTER",
+        "DELAY 500",
+        "STRING Target OS: Windows",
+        "ENTER",
+        "STRING Attack Type: HID Keyboard Injection",
+        "ENTER",
+        "STRING Framework: Blue-sec Enterprise Bluetooth Security Testing"
+    ]
+}

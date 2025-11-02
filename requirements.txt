@@ -1,0 +1,64 @@
+# Core Bluetooth libraries
+bleak>=0.21.1
+# Modern cross-platform Bluetooth Low Energy library
+
+# Async support (asyncio is built into Python 3.5+; do NOT install the backport on modern Python)
+aiohttp>=3.9.1
+
+# Security and cryptography
+cryptography>=41.0.7
+pycryptodome>=3.19.0
+
+# Data handling
+aiosqlite>=0.19.0
+python-dotenv>=1.0.0
+pyyaml>=6.0.1
+
+# Networking
+scapy>=2.5.0
+psutil>=5.9.0  # Cross-platform system and process utilities (includes network interface info)
+
+# CLI and UI
+rich>=13.7.0
+colorama>=0.4.6
+prompt-toolkit>=3.0.43
+click>=8.1.7
+
+# Reporting
+jinja2>=3.1.2
+reportlab>=4.0.7
+fpdf2>=2.7.6
+openpyxl>=3.1.2
+
+# API and Web
+fastapi>=0.109.0
+uvicorn>=0.27.0
+pydantic>=2.5.3
+requests>=2.31.0
+
+# Logging and monitoring
+loguru>=0.7.2
+python-json-logger>=2.0.7
+
+# Testing and validation
+pytest>=7.4.3
+pytest-asyncio>=0.23.3
+pytest-cov>=4.1.0
+
+# Security scanning
+bandit>=1.7.6
+
+# Database
+sqlalchemy>=2.0.25
+
+# Utilities
+python-dateutil>=2.8.2
+pytz>=2023.3
+
+# Optional: Classic Bluetooth (PyBluez) for BR/EDR scanning
+# Note: PyBluez 0.23 is incompatible with Python 3.12+ due to deprecated use_2to3.
+# On Windows and modern Python, either:
+#  - Skip installing PyBluez and use BLE-only scans (bleak) with: `blue-sec.py scan --type ble`
+#  - Use Python 3.10/3.11 where prebuilt wheels exist, then `pip install pybluez`
+#  - Or run under Linux/WSL/Docker where BlueZ is available
+# We intentionally do not pin PyBluez in requirements to keep installation working cross-platform.

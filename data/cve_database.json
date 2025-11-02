@@ -1,0 +1,106 @@
+{
+  "CVE-2017-0785": {
+    "cve_id": "CVE-2017-0785",
+    "title": "BlueBorne - Information Disclosure",
+    "description": "Information disclosure vulnerability in Android Bluetooth stack",
+    "severity": "high",
+    "cvss_score": 8.0,
+    "affected_versions": [
+      "Android 4.4-8.0"
+    ],
+    "affected_devices": [
+      "Android"
+    ],
+    "mitigation": "Update to latest Android version",
+    "references": [
+      "https://nvd.nist.gov/vuln/detail/CVE-2017-0785"
+    ],
+    "discovered_date": "2025-10-24 04:16:38"
+  },
+  "CVE-2017-1000251": {
+    "cve_id": "CVE-2017-1000251",
+    "title": "BlueBorne - Linux Kernel RCE",
+    "description": "Remote code execution in Linux Bluetooth stack",
+    "severity": "critical",
+    "cvss_score": 9.8,
+    "affected_versions": [
+      "Linux Kernel < 3.3"
+    ],
+    "affected_devices": [
+      "Linux"
+    ],
+    "mitigation": "Update Linux kernel to version 3.3 or higher",
+    "references": [
+      "https://nvd.nist.gov/vuln/detail/CVE-2017-1000251"
+    ],
+    "discovered_date": "2025-10-24 04:16:38"
+  },
+  "CVE-2018-5383": {
+    "cve_id": "CVE-2018-5383",
+    "title": "Bluetooth Pairing Vulnerability",
+    "description": "Improper authentication in Bluetooth BR/EDR pairing",
+    "severity": "high",
+    "cvss_score": 7.5,
+    "affected_versions": [
+      "Bluetooth Core 2.1 - 5.0"
+    ],
+    "affected_devices": [
+      "All"
+    ],
+    "mitigation": "Update firmware to support secure pairing only",
+    "references": [
+      "https://nvd.nist.gov/vuln/detail/CVE-2018-5383"
+    ],
+    "discovered_date": "2025-10-24 04:16:38"
+  },
+  "CVE-2019-9506": {
+    "cve_id": "CVE-2019-9506",
+    "title": "KNOB Attack",
+    "description": "Key Negotiation of Bluetooth vulnerability allowing encryption key size reduction",
+    "severity": "high",
+    "cvss_score": 8.1,
+    "affected_versions": [
+      "Bluetooth Core 1.0 - 5.1"
+    ],
+    "affected_devices": [
+      "All"
+    ],
+    "mitigation": "Update to Bluetooth 5.2 or apply security patches",
+    "references": [
+      "https://nvd.nist.gov/vuln/detail/CVE-2019-9506"
+    ],
+    "discovered_date": "2025-10-24 04:16:38"
+  },
+  "CVE-2020-9770": {
+    "cve_id": "CVE-2020-9770",
+    "title": "BLE GATT Vulnerability",
+    "description": "Improper access control in BLE GATT services",
+    "severity": "medium",
+    "cvss_score": 6.5,
+    "affected_versions": [
+      "Various"
+    ],
+    "affected_devices": [
+      "BLE"
+    ],
+    "mitigation": "Implement proper GATT service access controls",
+    "references": [],
+    "discovered_date": "2025-10-24 04:16:38"
+  },
+  "CVE-2021-28139": {
+    "cve_id": "CVE-2021-28139",
+    "title": "Bluetooth Impersonation Attack",
+    "description": "Improper verification allows device impersonation",
+    "severity": "high",
+    "cvss_score": 7.5,
+    "affected_versions": [
+      "Multiple vendors"
+    ],
+    "affected_devices": [
+      "Various"
+    ],
+    "mitigation": "Enable secure connections mode",
+    "references": [],
+    "discovered_date": "2025-10-24 04:16:38"
+  }
+}

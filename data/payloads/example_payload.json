@@ -1,0 +1,14 @@
+{
+    "payload_type": "example",
+    "description": "Example payload for custom injection attacks",
+    "data": {
+        "command": "AT+EXAMPLE",
+        "parameters": ["param1", "param2"],
+        "encoding": "utf-8"
+    },
+    "metadata": {
+        "created": "2025-10-24",
+        "author": "@irfan-sec",
+        "target_devices": ["generic"]
+    }
+}
