@@ -109,8 +109,11 @@ cd Blue-sec
 # Install required packages
 pip install -r requirements.txt
 
-# Run the tool
+# Run the tool (CLI)
 sudo python3 blue-sec.py --help
+
+# Run the GUI version
+python3 blue-sec-gui.py
 ```
 
 ### Docker Installation
@@ -121,6 +124,31 @@ docker build -t blue-sec .
 # Run in container
 docker run --net=host --privileged -it blue-sec
 ```
+
+## 🖥️ GUI Mode
+
+Blue-sec now includes a comprehensive **Graphical User Interface** for easier interaction:
+
+```bash
+# Start the GUI
+python3 blue-sec-gui.py
+```
+
+### GUI Features
+- 📡 **Device Scanner** - Visual device discovery with real-time updates
+- 🔍 **Vulnerability Scanner** - Interactive vulnerability assessment
+- 🎯 **HID Attack Panel** - Payload selection and execution interface  
+- ⚔️ **Attack Simulation** - Easy-to-use attack testing interface
+- 📊 **Real-time Logs** - Live operation logging and monitoring
+- 💾 **Report Generation** - One-click report creation
+
+The GUI provides all CLI functionality in an intuitive interface, perfect for both beginners and experienced users. All features include safety warnings and require explicit confirmation for dangerous operations.
+
+![Blue-sec GUI](docs/blue-sec-gui-screenshot.png)
+
+*Screenshot: Blue-sec GUI showing device scanner with sample devices*
+
+For complete GUI documentation, see [docs/GUI.md](docs/GUI.md).
 
 ## 📚 Usage
 

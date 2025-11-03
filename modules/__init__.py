@@ -19,6 +19,15 @@ from modules.utils import (
     console
 )
 
+# GUI module is optional - only import if tkinter is available
+try:
+    from modules.gui import BlueSecGUI, run_gui
+    _GUI_AVAILABLE = True
+except ImportError:
+    _GUI_AVAILABLE = False
+    BlueSecGUI = None
+    run_gui = None
+
 __all__ = [
     # Config
     'BlueSecConfig', 'load_config',
@@ -37,5 +46,7 @@ __all__ = [
     'banner', 'setup_logging', 'check_privileges', 'require_privileges',
     'confirm_action', 'format_mac_address', 'validate_mac_address',
     'timestamp', 'display_table', 'display_panel', 'AuditLogger', 'RateLimiter',
-    'console'
+    'console',
+    # GUI
+    'BlueSecGUI', 'run_gui'
 ]
